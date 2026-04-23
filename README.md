@@ -1,6 +1,6 @@
 # Terraform Azure Resource Group Setup
 
-This project demonstrates how to create an Azure Resource Group using Terraform and the AzureRM provider.
+This project demonstrates how to create an Azure Resource Group and a Virtual Network using Terraform and the AzureRM provider.
 
 ---
 
@@ -69,6 +69,18 @@ variable "environment" {
   type        = string
   default     = "dev"
 }
+
+variable "virtual_network_name" {
+  description = "Name of the Virtual Network"
+  type        = string
+  default     = "mtc-network"
+}
+
+variable "address_space" {
+  description = "Address space for the Virtual Network"
+  type        = list(string)
+  default     = ["10.123.0.0/16"]
+}
 ```
 
 ---
@@ -99,6 +111,17 @@ resource "azurerm_resource_group" "mtc-rg" {
     environment = var.environment
   }
 }
+
+resource "azurerm_virtual_network" "mtc-vn" {
+  name                = var.virtual_network_name
+  address_space       = var.address_space
+  location            = var.location
+  resource_group_name = var.resource_group_name
+
+  tags = {
+    environment = var.environment
+  }
+}
 ```
 
 ---
@@ -120,7 +143,7 @@ terraform plan
 You should see:
 
 ```
-Plan: 1 to add, 0 to change, 0 to destroy.
+Plan: 2 to add, 0 to change, 0 to destroy.
 ```
 
 ---
@@ -144,6 +167,14 @@ yes
 ```powershell
 terraform destroy
 ```
+
+---
+
+## Notes
+
+- The Virtual Network defines a private network inside Azure.
+- The address space specifies the IP range used within that network.
+- Additional components such as subnets and virtual machines can be added later.
 
 ---
 
