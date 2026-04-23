@@ -39,6 +39,12 @@ Set it using:
 $env:ARM_SUBSCRIPTION_ID="your-subscription-id"
 ```
 
+Example:
+
+```powershell
+$env:ARM_SUBSCRIPTION_ID="c928cbac-ea4a-4c7b-8970-3773f4175f80"
+```
+
 ---
 
 ## Step 3: Create `variables.tf`
