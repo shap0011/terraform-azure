@@ -4,16 +4,16 @@ This project demonstrates how to create an Azure Resource Group using Terraform 
 
 ---
 
-## 📦 Prerequisites
+## Prerequisites
 
 Make sure you have the following installed:
 
-- [Terraform](https://developer.hashicorp.com/terraform/downloads)
-- [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli)
+- Terraform
+- Azure CLI
 
 ---
 
-## 🔐 Step 1: Login to Azure
+## Step 1: Login to Azure
 
 Open PowerShell and run:
 
@@ -27,17 +27,11 @@ Verify your account and subscription:
 az account show
 ```
 
-or
-
-```powershell
-az account list --output table
-```
-
 ---
 
-## ⚠️ Step 2: Set Environment Variable (IMPORTANT)
+## Step 2: Set Environment Variable
 
-Terraform **requires a subscription ID**.
+Terraform requires a subscription ID.
 
 Set it using:
 
@@ -48,17 +42,38 @@ $env:ARM_SUBSCRIPTION_ID="your-subscription-id"
 Example:
 
 ```powershell
-$env:ARM_SUBSCRIPTION_ID="aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
+$env:ARM_SUBSCRIPTION_ID="c928cbac-ea4a-4c7b-8970-3773f4175f80"
 ```
-
-✅ **Important:**
-
-- Do **NOT** put `ARM_SUBSCRIPTION_ID` inside `main.tf`
-- Terraform automatically reads it from the environment
 
 ---
 
-## 🛠️ Step 3: Create `main.tf`
+## Step 3: Create `variables.tf`
+
+Create a file named `variables.tf` and add:
+
+```hcl
+variable "resource_group_name" {
+  description = "Name of the Azure Resource Group"
+  type        = string
+  default     = "mtc-resources"
+}
+
+variable "location" {
+  description = "Azure region where resources will be created"
+  type        = string
+  default     = "Canada Central"
+}
+
+variable "environment" {
+  description = "Environment tag (e.g., dev, prod)"
+  type        = string
+  default     = "dev"
+}
+```
+
+---
+
+## Step 4: Create `main.tf`
 
 Create a file named `main.tf` and add:
 
@@ -77,18 +92,18 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "mtc-rg" {
-  name     = "mtc-resources"
-  location = "Canada Central"
+  name     = var.resource_group_name
+  location = var.location
 
   tags = {
-    environment = "dev"
+    environment = var.environment
   }
 }
 ```
 
 ---
 
-## 🚀 Step 4: Initialize Terraform
+## Step 5: Initialize Terraform
 
 ```powershell
 terraform init
@@ -96,7 +111,7 @@ terraform init
 
 ---
 
-## 📋 Step 5: Plan Deployment
+## Step 6: Plan Deployment
 
 ```powershell
 terraform plan
@@ -110,7 +125,7 @@ Plan: 1 to add, 0 to change, 0 to destroy.
 
 ---
 
-## ✅ Step 6: Apply Deployment
+## Step 7: Apply Deployment
 
 ```powershell
 terraform apply
@@ -124,7 +139,7 @@ yes
 
 ---
 
-## 🧹 (Optional) Destroy Resources
+## Step 8: Destroy Resources (Optional)
 
 ```powershell
 terraform destroy
@@ -132,36 +147,12 @@ terraform destroy
 
 ---
 
-## 🧠 Key Takeaways
-
-- Azure login (`az login`) is **not enough**
-- Terraform needs a **subscription ID**
-- Use environment variable:
-
-```powershell
-$env:ARM_SUBSCRIPTION_ID="your-id"
-```
-
-- Do **NOT** write this in `main.tf`:
-
-```hcl
-subscription_id = "ARM_SUBSCRIPTION_ID" ❌
-```
-
----
-
-## 📁 Project Structure
+## Project Structure
 
 ```
 .
 ├── main.tf
-└── README.md
+├── variables.tf
+├── README.md
+└── .gitignore
 ```
-
----
-
-## 🎯 Next Steps
-
-- Add more Azure resources (Storage Account, VM, etc.)
-- Learn about Terraform variables (`variables.tf`)
-- Use `.tfvars` files for configuration
