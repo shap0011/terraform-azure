@@ -1,0 +1,24 @@
+# Terraform files
+
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+
+# Terraform lock file (optional to ignore, but usually committed)
+
+# .terraform.lock.hcl
+
+# Environment variables
+
+.env
+
+# OS files
+
+.DS_Store
+Thumbs.db
+
+# IDE files
+
+.vscode/
+.idea/
