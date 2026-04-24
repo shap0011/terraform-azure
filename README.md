@@ -797,3 +797,66 @@ These commands help verify that you are connected to the correct virtual machine
 This confirms that the infrastructure is deployed correctly and accessible.
 
 ---
+
+---
+
+## Verify Ubuntu Installation
+
+After connecting to the Virtual Machine, you can verify the operating system version.
+
+---
+
+### Check OS Version
+
+Run the following command inside the VM:
+
+```bash id="ub01"
+lsb_release -a
+```
+
+---
+
+### Example Output
+
+```id="ub02"
+No LSB modules are available.
+Distributor ID: Ubuntu
+Description:    Ubuntu 22.04.5 LTS
+Release:        22.04
+Codename:       jammy
+```
+
+---
+
+### Notes
+
+- This confirms that the VM is running Ubuntu.
+- The version matches the image defined in Terraform:
+
+```hcl id="ub03"
+source_image_reference {
+  publisher = "Canonical"
+  offer     = "0001-com-ubuntu-server-jammy"
+  sku       = "22_04-lts"
+  version   = "latest"
+}
+```
+
+- `"jammy"` is the codename for Ubuntu 22.04.
+- This step verifies that the correct OS image was deployed.
+
+---
+
+This confirms that the Virtual Machine was created successfully with the expected configuration.
+
+---
+
+Exit VM
+
+```
+adminuser@mtc-vm:~$ exit
+logout
+Connection to 20.48.255.134 closed.
+```
+
+---
