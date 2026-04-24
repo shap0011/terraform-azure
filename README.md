@@ -635,8 +635,6 @@ This step prepares the network connection for future resources such as virtual m
 
 ---
 
----
-
 ## Linux Virtual Machine
 
 A Virtual Machine (VM) is a compute resource that runs an operating system and applications in Azure.
@@ -729,5 +727,73 @@ Replace `<public-ip-address>` with the Public IP created earlier.
 - The private key remains on your local machine and is used for authentication.
 
 This step creates a fully functional virtual machine connected to your network.
+
+---
+
+## Connect to Virtual Machine
+
+After the Virtual Machine is deployed, you can connect to it using SSH.
+
+---
+
+### SSH Command
+
+Run the following command in PowerShell:
+
+```powershell id="ssh01"
+ssh -i ~/.ssh/mtcazurekey adminuser@<public-ip-address>
+```
+
+Replace `<public-ip-address>` with the Public IP created earlier.
+
+Example:
+
+```powershell id="ssh02"
+ssh -i ~/.ssh/mtcazurekey adminuser@20.48.255.134
+```
+
+---
+
+### Successful Connection
+
+If the connection is successful, you will see a message similar to:
+
+```id="ssh03"
+Welcome to Ubuntu 22.04.5 LTS (GNU/Linux ...)
+```
+
+---
+
+### Notes
+
+- The `-i` flag specifies the private SSH key used for authentication.
+- The username must match the one defined in the Terraform configuration (`adminuser`).
+- The Public IP is assigned by Azure and used for external access.
+- The private IP (e.g., `10.123.1.4`) is used internally within the Virtual Network.
+- SSH uses port 22, which must be allowed in the Network Security Group.
+
+---
+
+### Verify Connection
+
+After login, you can run basic commands:
+
+```bash id="ssh04"
+whoami
+```
+
+```bash id="ssh05"
+hostname
+```
+
+```bash id="ssh06"
+ip a
+```
+
+These commands help verify that you are connected to the correct virtual machine.
+
+---
+
+This confirms that the infrastructure is deployed correctly and accessible.
 
 ---
