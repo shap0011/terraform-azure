@@ -387,3 +387,131 @@ In this example:
 The subnet is a smaller portion of the main network.
 
 ---
+
+---
+
+## Network Security Group and Rule
+
+A Network Security Group (NSG) is used to control inbound and outbound network traffic for Azure resources.
+
+---
+
+### Add Network Security Group
+
+Update your `main.tf` file by adding:
+
+```hcl id="g7p2kx"
+resource "azurerm_network_security_group" "mtc-sg" {
+  name                = "mtc-sg"
+  location            = azurerm_resource_group.mtc-rg.location
+  resource_group_name = azurerm_resource_group.mtc-rg.name
+
+  tags = {
+    environment = "dev"
+  }
+}
+```
+
+---
+
+### Add Security Rule
+
+Add a rule to define allowed traffic:
+
+```hcl id="v8q4lm"
+resource "azurerm_network_security_rule" "mtc-dev-rule" {
+  name                        = "mtc-dev-rule"
+  priority                    = 100
+  direction                   = "Inbound"
+  access                      = "Allow"
+  protocol                    = "Tcp"
+  source_port_range           = "*"
+  destination_port_range      = "*"
+  source_address_prefix       = "*"
+  destination_address_prefix  = "*"
+  resource_group_name         = azurerm_resource_group.mtc-rg.name
+  network_security_group_name = azurerm_network_security_group.mtc-sg.name
+}
+```
+
+---
+
+### Plan Output
+
+After running:
+
+```powershell id="n3t9x1"
+terraform plan
+```
+
+You should see:
+
+```id="r2k8sd"
+Plan: 2 to add, 0 to change, 0 to destroy.
+```
+
+---
+
+### Notes
+
+- A Network Security Group (NSG) acts as a firewall for your network.
+- Security rules define what traffic is allowed or denied.
+- `direction = "Inbound"` means incoming traffic is controlled.
+- `access = "Allow"` permits traffic matching the rule.
+- `protocol = "Tcp"` applies the rule to TCP traffic.
+- Using `"*"` allows all ports and all IP addresses.
+- `priority` determines rule order (lower number = higher priority).
+- The rule is associated with the NSG using `network_security_group_name`.
+
+This example creates a basic rule that allows all inbound TCP traffic. In real scenarios, rules should be more restrictive.
+
+---
+
+---
+
+## Subnet and Network Security Group Association
+
+After creating a Network Security Group (NSG), it must be associated with a subnet or network interface to take effect.
+
+---
+
+### Add Association
+
+Update your `main.tf` file by adding:
+
+```hcl id="x7p3wq"
+resource "azurerm_subnet_network_security_group_association" "mtc-sga" {
+  subnet_id                 = azurerm_subnet.mtc-subnet.id
+  network_security_group_id = azurerm_network_security_group.mtc-sg.id
+}
+```
+
+---
+
+### Plan Output
+
+After running:
+
+```powershell id="m8z2ra"
+terraform plan
+```
+
+You should see:
+
+```id="k3n7sd"
+Plan: 1 to add, 0 to change, 0 to destroy.
+```
+
+---
+
+### Notes
+
+- An NSG does not apply to any resources until it is associated.
+- This resource links the NSG to a subnet.
+- `subnet_id` identifies the subnet where the rules will apply.
+- `network_security_group_id` identifies the NSG to attach.
+- Once associated, all resources inside the subnet are affected by the NSG rules.
+
+This step ensures that the defined security rules are enforced on the network.
+
+---
