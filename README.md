@@ -572,3 +572,65 @@ Plan: 1 to add, 0 to change, 0 to destroy.
 This step prepares your infrastructure for external access.
 
 ---
+
+---
+
+## Network Interface (NIC)
+
+A Network Interface connects a Virtual Machine to a Virtual Network and allows it to communicate with other resources.
+
+---
+
+### Add Network Interface Resource
+
+Update your `main.tf` file by adding:
+
+```hcl id="n1c7xp"
+resource "azurerm_network_interface" "mtc-nic" {
+  name                = "mtc-nic"
+  location            = azurerm_resource_group.mtc-rg.location
+  resource_group_name = azurerm_resource_group.mtc-rg.name
+
+  ip_configuration {
+    name                          = "internal"
+    subnet_id                     = azurerm_subnet.mtc-subnet.id
+    private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = azurerm_public_ip.mtc-ip.id
+  }
+
+  tags = {
+    environment = "dev"
+  }
+}
+```
+
+---
+
+### Plan Output
+
+After running:
+
+```powershell id="f3k9pl"
+terraform plan
+```
+
+You should see:
+
+```id="v8x2sd"
+Plan: 1 to add, 0 to change, 0 to destroy.
+```
+
+---
+
+### Notes
+
+- A Network Interface (NIC) connects resources (such as virtual machines) to a network.
+- `subnet_id` links the NIC to a subnet inside the Virtual Network.
+- `private_ip_address_allocation = "Dynamic"` lets Azure assign a private IP automatically.
+- The private IP comes from the subnet range (e.g., `10.123.1.0/24`).
+- `public_ip_address_id` attaches a Public IP for external access.
+- Without a NIC, a Virtual Machine cannot communicate with the network.
+
+This step prepares the network connection for future resources such as virtual machines.
+
+---
