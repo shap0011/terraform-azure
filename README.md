@@ -533,7 +533,8 @@ resource "azurerm_public_ip" "mtc-ip" {
   name                = "mtc-ip"
   resource_group_name = azurerm_resource_group.mtc-rg.name
   location            = azurerm_resource_group.mtc-rg.location
-  allocation_method   = "Dynamic"
+  allocation_method   = "Static"
+  sku                 = "Standard"
 
   tags = {
     environment = "dev"
@@ -562,8 +563,9 @@ Plan: 1 to add, 0 to change, 0 to destroy.
 ### Notes
 
 - A Public IP enables communication between Azure resources and the internet.
-- `allocation_method = "Dynamic"` means the IP address is assigned when the resource is created.
-- The IP address may change if the resource is stopped and restarted.
+- `sku = "Standard"` is used by default in newer AzureRM provider versions.
+- Standard Public IPs require `allocation_method = "Static"`.
+- The IP address is assigned at creation time and remains the same.
 - A Public IP is typically associated with a Network Interface or Load Balancer.
 - This resource alone does not expose anything until it is attached to another resource.
 
