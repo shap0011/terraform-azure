@@ -860,3 +860,48 @@ Connection to 20.48.255.134 closed.
 ```
 
 ---
+
+## Summary
+
+In this project, the following infrastructure was created and tested using Terraform:
+
+- Resource Group
+- Virtual Network (VNet)
+- Subnet
+- Network Security Group (NSG) and security rule
+- Subnet and NSG association
+- Public IP Address
+- Network Interface (NIC)
+- Linux Virtual Machine (Ubuntu)
+
+---
+
+## Validation
+
+The deployment was verified by:
+
+- Running `terraform plan` and `terraform apply`
+- Connecting to the Virtual Machine using SSH
+- Confirming the Ubuntu version installed on the VM
+
+---
+
+## Cleanup
+
+All resources were successfully removed using:
+
+```powershell id="cleanup01"
+terraform destroy
+```
+
+This ensures no cloud resources remain running after testing.
+
+---
+
+## Conclusion
+
+This project demonstrates a complete end-to-end infrastructure deployment in Azure using Terraform, including networking, security, and compute resources.
+
+The Virtual Machine was successfully provisioned and accessed remotely, confirming that all components were configured correctly.
+
+---
