@@ -634,3 +634,100 @@ Plan: 1 to add, 0 to change, 0 to destroy.
 This step prepares the network connection for future resources such as virtual machines.
 
 ---
+
+---
+
+## Linux Virtual Machine
+
+A Virtual Machine (VM) is a compute resource that runs an operating system and applications in Azure.
+
+---
+
+### Add Virtual Machine Resource
+
+Update your `main.tf` file by adding:
+
+```hcl id="vm1k2p"
+resource "azurerm_linux_virtual_machine" "mtc-vm" {
+  name                = "mtc-vm"
+  resource_group_name = azurerm_resource_group.mtc-rg.name
+  location            = azurerm_resource_group.mtc-rg.location
+  size                = "Standard_B1s"
+  admin_username      = "adminuser"
+
+  network_interface_ids = [
+    azurerm_network_interface.mtc-nic.id,
+  ]
+
+  admin_ssh_key {
+    username   = "adminuser"
+    public_key = file("~/.ssh/mtcazurekey.pub")
+  }
+
+  os_disk {
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
+  }
+
+  source_image_reference {
+    publisher = "Canonical"
+    offer     = "0001-com-ubuntu-server-jammy"
+    sku       = "22_04-lts"
+    version   = "latest"
+  }
+}
+```
+
+---
+
+### Plan Output
+
+After running:
+
+```powershell id="planvm01"
+terraform plan
+```
+
+You should see:
+
+```id="planvm02"
+Plan: 1 to add, 0 to change, 0 to destroy.
+```
+
+---
+
+### Notes
+
+- A Virtual Machine provides compute resources in Azure.
+- `size = "Standard_B1s"` defines the VM size (CPU, memory).
+- `admin_username` is used to log into the VM.
+- `network_interface_ids` connects the VM to the network.
+- The VM uses the previously created Network Interface, which includes both private and public connectivity.
+- `admin_ssh_key` enables secure SSH access using a public key.
+- `file("~/.ssh/mtcazurekey.pub")` reads the SSH public key from your local machine.
+- `os_disk` defines storage settings for the VM.
+- `source_image_reference` specifies the operating system image (Ubuntu 22.04 in this case).
+
+---
+
+### SSH Access
+
+After deployment, you can connect to the VM using SSH:
+
+```powershell id="sshcmd01"
+ssh adminuser@<public-ip-address>
+```
+
+Replace `<public-ip-address>` with the Public IP created earlier.
+
+---
+
+### Notes on SSH Key
+
+- The SSH key pair must exist on your machine.
+- The `.pub` file contains the public key used by Azure.
+- The private key remains on your local machine and is used for authentication.
+
+This step creates a fully functional virtual machine connected to your network.
+
+---
