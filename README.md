@@ -515,3 +515,58 @@ Plan: 1 to add, 0 to change, 0 to destroy.
 This step ensures that the defined security rules are enforced on the network.
 
 ---
+
+---
+
+## Public IP Address
+
+A Public IP allows Azure resources to be accessible from the internet.
+
+---
+
+### Add Public IP Resource
+
+Update your `main.tf` file by adding:
+
+```hcl id="q8n2vx"
+resource "azurerm_public_ip" "mtc-ip" {
+  name                = "mtc-ip"
+  resource_group_name = azurerm_resource_group.mtc-rg.name
+  location            = azurerm_resource_group.mtc-rg.location
+  allocation_method   = "Dynamic"
+
+  tags = {
+    environment = "dev"
+  }
+}
+```
+
+---
+
+### Plan Output
+
+After running:
+
+```powershell id="c1p9zw"
+terraform plan
+```
+
+You should see:
+
+```id="n7k3sd"
+Plan: 1 to add, 0 to change, 0 to destroy.
+```
+
+---
+
+### Notes
+
+- A Public IP enables communication between Azure resources and the internet.
+- `allocation_method = "Dynamic"` means the IP address is assigned when the resource is created.
+- The IP address may change if the resource is stopped and restarted.
+- A Public IP is typically associated with a Network Interface or Load Balancer.
+- This resource alone does not expose anything until it is attached to another resource.
+
+This step prepares your infrastructure for external access.
+
+---
