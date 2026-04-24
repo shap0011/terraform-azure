@@ -298,3 +298,92 @@ This command deletes all resources managed by Terraform in the current configura
 - This is equivalent to running `terraform destroy`.
 
 ---
+
+---
+
+## Terraform State Backup
+
+Terraform automatically creates a backup of the state file named:
+
+```
+terraform.tfstate.backup
+```
+
+This file contains the previous state before the last change.
+
+---
+
+### Restore State from Backup
+
+If a mistake is made and the current state becomes incorrect, you can restore it from the backup:
+
+```powershell
+copy terraform.tfstate.backup terraform.tfstate
+```
+
+---
+
+### Notes
+
+- The backup file is created automatically by Terraform.
+- It stores the last known good state before changes were applied.
+- Restoring the backup can help recover from accidental modifications.
+- Always ensure Terraform is not running when replacing the state file.
+- State files may contain sensitive information and should not be committed to version control.
+
+---
+
+---
+
+## Subnet Configuration
+
+A subnet is a smaller network inside a Virtual Network. It allows you to organize and control resources within your network.
+
+---
+
+### Add Subnet Resource
+
+Update your `main.tf` file by adding:
+
+```hcl id="z4y8u1"
+resource "azurerm_subnet" "mtc-subnet" {
+  name                 = "mtc-subnet"
+  resource_group_name  = azurerm_resource_group.mtc-rg.name
+  virtual_network_name = azurerm_virtual_network.mtc-vn.name
+  address_prefixes     = ["10.123.1.0/24"]
+}
+```
+
+---
+
+### Plan Output
+
+After running:
+
+```powershell id="m2x9pt"
+terraform plan
+```
+
+You should see:
+
+```id="k9v2s1"
+Plan: 1 to add, 0 to change, 0 to destroy.
+```
+
+---
+
+### Notes
+
+- A subnet must be created inside a Virtual Network.
+- `virtual_network_name` links the subnet to the VNet.
+- `address_prefixes` defines the IP range for the subnet.
+- The subnet range must be within the Virtual Network address space.
+
+In this example:
+
+- Virtual Network: `10.123.0.0/16`
+- Subnet: `10.123.1.0/24`
+
+The subnet is a smaller portion of the main network.
+
+---
